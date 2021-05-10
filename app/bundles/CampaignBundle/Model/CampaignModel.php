@@ -16,6 +16,7 @@ use Mautic\CampaignBundle\Executioner\ContactFinder\Limiter\ContactLimiter;
 use Mautic\CampaignBundle\Form\Type\CampaignType;
 use Mautic\CampaignBundle\Helper\ChannelExtractor;
 use Mautic\CampaignBundle\Membership\MembershipBuilder;
+use Mautic\CoreBundle\Doctrine\GeneratedColumn\GeneratedColumnsProviderInterface;
 use Mautic\CoreBundle\Helper\Chart\ChartQuery;
 use Mautic\CoreBundle\Helper\Chart\LineChart;
 use Mautic\CoreBundle\Helper\CoreParametersHelper;
@@ -43,11 +44,14 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class CampaignModel extends CommonFormModel implements GlobalSearchInterface
 {
+    private GeneratedColumnsProviderInterface $generatedColumnsProvider;
+
     public function __construct(
         protected ListModel $leadListModel,
         protected FormModel $formModel,
         private EventCollector $eventCollector,
         private MembershipBuilder $membershipBuilder,
+        private GeneratedColumnsProviderInterface $generatedColumnsProvider,
         private ContactTracker $contactTracker,
         EntityManager $em,
         CorePermissions $security,
@@ -59,6 +63,7 @@ class CampaignModel extends CommonFormModel implements GlobalSearchInterface
         CoreParametersHelper $coreParametersHelper,
     ) {
         parent::__construct($em, $security, $dispatcher, $router, $translator, $userHelper, $mauticLogger, $coreParametersHelper);
+        $this->generatedColumnsProvider = $generatedColumnsProvider;
     }
 
     /**

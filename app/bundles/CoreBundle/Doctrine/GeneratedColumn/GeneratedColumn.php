@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Mautic\CoreBundle\Doctrine\GeneratedColumn;
 
 final class GeneratedColumn implements GeneratedColumnInterface
@@ -9,80 +7,192 @@ final class GeneratedColumn implements GeneratedColumnInterface
     /**
      * @var string
      */
-    private $tablePrefix = '';
+    private $tableName;
 
-    private string $columnName;
+    /**
+     * @var string
+     */
+    private $tablePrefix;
 
-    private ?string $originalDateColumn = null;
+    /**
+     * @var string
+     */
+    private $columnName;
 
-    private ?string $timeUnit = null;
+    /**
+     * @var string
+     */
+    private $columnType;
 
-    private array $indexColumns = [];
+    /**
+     * @var string
+     */
+    private $as;
 
-    public function __construct(
-        private string $tableName,
-        string $columnName,
-        private string $columnType,
-        private string $as,
-    ) {
+    /**
+     * @var bool
+     */
+    private $stored = false;
+
+    /**
+     * @var string
+     */
+    private $originalDateColumn;
+
+    /**
+     * @var string
+     */
+    private $timeUnit;
+
+    /**
+     * @var array
+     */
+    private $indexColumns = [];
+
+    /**
+     * @var ?string
+     */
+    private $filterDateColumn;
+
+    /**
+     * @param string $tableName
+     * @param string $columnName
+     * @param string $columnType
+     * @param string $as
+     */
+    public function __construct($tableName, $columnName, $columnType, $as)
+    {
+        $this->as             = $as;
+        $this->tableName      = $tableName;
         $this->indexColumns[] = $columnName;
         $this->tablePrefix    = MAUTIC_TABLE_PREFIX;
         $this->columnName     = $columnName;
+        $this->columnType     = $columnType;
     }
 
-    public function getTableName(): string
+    /**
+     * @return string
+     */
+    public function getTableName()
     {
         return $this->tablePrefix.$this->tableName;
     }
 
-    public function getColumnName(): string
+    /**
+     * @return string
+     */
+    public function getColumnName()
     {
         return $this->columnName;
     }
 
-    public function addIndexColumn(string $indexColumn): void
+    public function setStored(bool $stored): void
+    {
+        $this->stored = $stored;
+    }
+
+    /**
+     * @param string $indexColumn
+     */
+    public function addIndexColumn($indexColumn)
     {
         $this->indexColumns[] = $indexColumn;
     }
 
-    public function setOriginalDateColumn(string $originalDateColumn, string $timeUnit): void
+    public function prependIndexColumn(string $indexColumn): void
+    {
+        array_unshift($this->indexColumns, $indexColumn);
+    }
+
+    /**
+     * If set then the line chart queries will use this column for the time unit instead of the original.
+     *
+     * @param string $originalDateColumn
+     * @param string $timeUnit
+     */
+    public function setOriginalDateColumn($originalDateColumn, $timeUnit)
     {
         $this->originalDateColumn = $originalDateColumn;
         $this->timeUnit           = $timeUnit;
     }
 
-    public function getOriginalDateColumn(): ?string
+    /**
+     * @return string
+     */
+    public function getOriginalDateColumn()
     {
         return $this->originalDateColumn;
     }
 
-    public function getTimeUnit(): string
+    /**
+     * @return string
+     */
+    public function getTimeUnit()
     {
         return $this->timeUnit;
     }
 
-    public function getAlterTableSql(): string
+    /**
+     * @return string
+     */
+    public function getAlterTableSql()
     {
-        return "ALTER TABLE {$this->getTableName()} ADD {$this->getColumnName()} {$this->getColumnDefinition()};
-            ALTER TABLE {$this->getTableName()} ADD INDEX `{$this->getIndexName()}`({$this->indexColumnsToString()})";
+        return "ALTER TABLE {$this->getTableName()} {$this->getAddColumnSql()};
+            ALTER TABLE {$this->getTableName()} {$this->getAddIndexSql()}";
     }
 
-    public function getColumnDefinition(): string
+    public function getAddColumnSql(): string
     {
-        return "{$this->columnType} AS ({$this->as}) COMMENT '(DC2Type:generated)'";
+        return "ADD {$this->getColumnName()} {$this->getColumnDefinition()}";
     }
 
-    public function getIndexColumns(): array
+    public function getAddIndexSql(): string
+    {
+        return "ADD INDEX `{$this->getIndexName()}`({$this->indexColumnsToString()})";
+    }
+
+    /**
+     * @return string
+     */
+    public function getColumnDefinition()
+    {
+        $stored = $this->stored ? ' STORED' : '';
+
+        return "{$this->columnType} AS ({$this->as}){$stored} COMMENT '(DC2Type:generated)'";
+    }
+
+    /**
+     * @return array
+     */
+    public function getIndexColumns()
     {
         return $this->indexColumns;
     }
 
-    public function getIndexName(): string
+    /**
+     * @return string
+     */
+    public function getIndexName()
     {
         return $this->tablePrefix.$this->indexColumnsToString('_');
     }
 
-    private function indexColumnsToString(string $separator = ', '): string
+    public function getFilterDateColumn(): ?string
+    {
+        return $this->filterDateColumn;
+    }
+
+    public function setFilterDateColumn(?string $filterDateColumn): void
+    {
+        $this->filterDateColumn = $filterDateColumn;
+    }
+
+    /**
+     * @param string $separator
+     *
+     * @return string
+     */
+    private function indexColumnsToString($separator = ', ')
     {
         return implode($separator, $this->indexColumns);
     }

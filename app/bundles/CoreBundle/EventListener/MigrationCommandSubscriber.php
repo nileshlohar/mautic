@@ -1,27 +1,48 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Mautic\CoreBundle\EventListener;
 
-use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\Connection;
 use Mautic\CoreBundle\Doctrine\GeneratedColumn\GeneratedColumn;
+use Mautic\CoreBundle\Doctrine\GeneratedColumn\GeneratedColumnInterface;
 use Mautic\CoreBundle\Doctrine\Provider\GeneratedColumnsProviderInterface;
 use Mautic\CoreBundle\Doctrine\Provider\VersionProviderInterface;
 use Symfony\Component\Console\ConsoleEvents;
 use Symfony\Component\Console\Event\ConsoleTerminateEvent;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 class MigrationCommandSubscriber implements EventSubscriberInterface
 {
+    /**
+     * @var VersionProviderInterface
+     */
+    private $versionProvider;
+
+    /**
+     * @var GeneratedColumnsProviderInterface
+     */
+    private $generatedColumnsProvider;
+
+    /**
+     * @var Connection
+     */
+    private $connection;
+
     public function __construct(
-        private VersionProviderInterface $versionProvider,
-        private GeneratedColumnsProviderInterface $generatedColumnsProvider,
-        private Connection $connection,
+        VersionProviderInterface $versionProvider,
+        GeneratedColumnsProviderInterface $generatedColumnsProvider,
+        Connection $connection,
     ) {
+        $this->versionProvider          = $versionProvider;
+        $this->generatedColumnsProvider = $generatedColumnsProvider;
+        $this->connection               = $connection;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public static function getSubscribedEvents(): array
     {
         return [
@@ -40,37 +61,63 @@ class MigrationCommandSubscriber implements EventSubscriberInterface
 
         if (!$this->generatedColumnsProvider->generatedColumnsAreSupported()) {
             $output->writeln('');
-            $output->writeln("<comment>Your database version ({$this->versionProvider->getVersion()}) does not support generated columns. Upgrade at least to {$this->generatedColumnsProvider->getMinimalSupportedVersion()} to get the speed improvements.</comment>");
+            $output->writeln("<comment>Your database version ({$this->versionProvider->getVersion()}) does not support generated columns. Upgrade at least to {$this->generatedColumnsProvider->getMinimalSupportedVersion()} and update `db_server_version` accordingly to get the speed improvements.</comment>");
             $output->writeln('');
 
             return;
         }
 
-        $stopwatch        = new Stopwatch();
-        $generatedColumns = $this->generatedColumnsProvider->getGeneratedColumns();
+        $generatedColumns   = $this->generatedColumnsProvider->getGeneratedColumns();
+        $groupedByTableName = [];
 
         foreach ($generatedColumns as $generatedColumn) {
             if ($this->generatedColumnExistsInSchema($generatedColumn)) {
                 continue;
             }
 
-            $stopwatch->start($generatedColumn->getColumnName(), 'generated columns');
+            $tableName = $generatedColumn->getTableName();
 
-            $output->writeln('');
-            $output->writeln("<info>++</info> adding generated column <comment>{$generatedColumn->getColumnName()}</comment>");
-            $output->writeln("<comment>-></comment> {$generatedColumn->getAlterTableSql()}");
+            if (!isset($groupedByTableName[$tableName])) {
+                $groupedByTableName[$tableName] = [];
+            }
 
-            $this->connection->executeQuery($generatedColumn->getAlterTableSql());
-
-            $duration = (string) $stopwatch->stop($generatedColumn->getColumnName());
-            $output->writeln("<info>++</info> generated column added ({$duration})");
-            $output->writeln('');
+            $groupedByTableName[$tableName][$generatedColumn->getColumnName()] = $generatedColumn;
         }
+
+        foreach ($groupedByTableName as $tableName => $generatedColumns) {
+            $query = "ALTER TABLE {$tableName} ".implode(', '.PHP_EOL, array_map(function (GeneratedColumnInterface $generatedColumn) {
+                return $generatedColumn->getAddColumnSql();
+            }, $generatedColumns));
+
+            $this->executeAlterQuery($query, $tableName, 'adding generated columns', $output);
+
+            $query = "ALTER TABLE {$tableName} ".implode(', '.PHP_EOL, array_map(function (GeneratedColumnInterface $generatedColumn) {
+                return $generatedColumn->getAddIndexSql();
+            }, $generatedColumns));
+
+            $this->executeAlterQuery($query, $tableName, 'adding indices', $output);
+        }
+    }
+
+    private function executeAlterQuery(string $query, string $tableName, string $comment, OutputInterface $output): void
+    {
+        $stopwatch = new Stopwatch();
+        $stopwatch->start($tableName, 'generated columns');
+
+        $output->writeln('');
+        $output->writeln("<info>++</info> Executing {$comment} for table <comment>{$tableName}</comment>");
+        $output->writeln("<comment>-></comment> {$query}");
+
+        $this->connection->query($query);
+
+        $duration = (string) $stopwatch->stop($tableName);
+        $output->writeln("<info>++</info> Execution finished ({$duration})");
+        $output->writeln('');
     }
 
     private function generatedColumnExistsInSchema(GeneratedColumn $generatedColumn): bool
     {
-        $tableColumns = $this->connection->createSchemaManager()->listTableColumns($generatedColumn->getTableName());
+        $tableColumns = $this->connection->getSchemaManager()->listTableColumns($generatedColumn->getTableName());
 
         if (isset($tableColumns[$generatedColumn->getColumnName()])) {
             return true;

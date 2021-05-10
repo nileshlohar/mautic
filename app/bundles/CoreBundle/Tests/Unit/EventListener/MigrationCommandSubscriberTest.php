@@ -1,73 +1,76 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Mautic\CoreBundle\Tests\Unit\EventListener;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Schema\MySQLSchemaManager;
+use Doctrine\DBAL\Schema\MySqlSchemaManager;
 use Mautic\CoreBundle\Doctrine\GeneratedColumn\GeneratedColumn;
 use Mautic\CoreBundle\Doctrine\GeneratedColumn\GeneratedColumns;
 use Mautic\CoreBundle\Doctrine\Provider\GeneratedColumnsProviderInterface;
 use Mautic\CoreBundle\Doctrine\Provider\VersionProviderInterface;
 use Mautic\CoreBundle\EventListener\MigrationCommandSubscriber;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Event\ConsoleTerminateEvent;
-use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class MigrationCommandSubscriberTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var MockObject|VersionProviderInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject|VersionProviderInterface
      */
-    private MockObject $versionProvider;
+    private $versionProvider;
 
     /**
-     * @var MockObject|GeneratedColumnsProviderInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject|GeneratedColumnsProviderInterface
      */
-    private MockObject $generatedColumnsProvider;
+    private $generatedColumnsProvider;
 
     /**
-     * @var MockObject|Connection
+     * @var \PHPUnit\Framework\MockObject\MockObject|Connection
      */
-    private MockObject $connection;
-
-    private ConsoleTerminateEvent $event;
+    private $connection;
 
     /**
-     * @var MockObject|Command
+     * @var \PHPUnit\Framework\MockObject\MockObject|ConsoleTerminateEvent
      */
-    private MockObject $command;
+    private $event;
 
     /**
-     * @var MockObject|MySQLSchemaManager
+     * @var \PHPUnit\Framework\MockObject\MockObject|Command
      */
-    private MockObject $schemaManager;
+    private $command;
 
     /**
-     * @var MockObject|OutputInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject|OutputInterface
      */
-    private MockObject $output;
+    private $output;
 
     /**
-     * @var GeneratedColumns<GeneratedColumn>
+     * @var \PHPUnit\Framework\MockObject\MockObject|MySqlSchemaManager
      */
-    private GeneratedColumns $generatedColumns;
+    private $schemaManager;
 
-    private MigrationCommandSubscriber $subscriber;
+    /**
+     * @var GeneratedColumns
+     */
+    private $generatedColumns;
 
-    protected function setUp(): void
+    /**
+     * @var MigrationCommandSubscriber
+     */
+    private $subscriber;
+
+    protected function setUp()
     {
         parent::setUp();
 
         $this->versionProvider          = $this->createMock(VersionProviderInterface::class);
         $this->generatedColumnsProvider = $this->createMock(GeneratedColumnsProviderInterface::class);
         $this->connection               = $this->createMock(Connection::class);
+        $this->event                    = $this->createMock(ConsoleTerminateEvent::class);
         $this->command                  = $this->createMock(Command::class);
         $this->output                   = $this->createMock(OutputInterface::class);
-        $this->schemaManager            = $this->createMock(MySQLSchemaManager::class);
+        $this->schemaManager            = $this->createMock(MySqlSchemaManager::class);
         $this->generatedColumns         = new GeneratedColumns();
         $this->subscriber               = new MigrationCommandSubscriber(
             $this->versionProvider,
@@ -75,15 +78,13 @@ class MigrationCommandSubscriberTest extends \PHPUnit\Framework\TestCase
             $this->connection
         );
 
-        $input = $this->createMock(InputInterface::class);
-
-        $this->event = new ConsoleTerminateEvent($this->command, $input, $this->output, 0);
-
-        $this->connection->method('createSchemaManager')->willReturn($this->schemaManager);
+        $this->event->method('getCommand')->willReturn($this->command);
+        $this->event->method('getOutput')->willReturn($this->output);
+        $this->connection->method('getSchemaManager')->willReturn($this->schemaManager);
         $this->generatedColumns->add(new GeneratedColumn('page_hits', 'generated_hit_date', 'DATE', 'not important'));
     }
 
-    public function testAddGeneratedColumnsWillRunOnlyForMigrationCommand(): void
+    public function testAddGeneratedColumnsWillRunOnlyForMigrationCommand()
     {
         $this->command->expects($this->once())
             ->method('getName')
@@ -95,7 +96,7 @@ class MigrationCommandSubscriberTest extends \PHPUnit\Framework\TestCase
         $this->subscriber->addGeneratedColumns($this->event);
     }
 
-    public function testAddGeneratedColumnsWhenNotSupported(): void
+    public function testAddGeneratedColumnsWhenNotSupported()
     {
         $this->command->expects($this->once())
             ->method('getName')
@@ -111,7 +112,7 @@ class MigrationCommandSubscriberTest extends \PHPUnit\Framework\TestCase
         $this->subscriber->addGeneratedColumns($this->event);
     }
 
-    public function testAddGeneratedColumnsWhenExistsAlready(): void
+    public function testAddGeneratedColumnsWhenExistsAlready()
     {
         $this->command->expects($this->once())
             ->method('getName')
@@ -130,12 +131,12 @@ class MigrationCommandSubscriberTest extends \PHPUnit\Framework\TestCase
             ->willReturn(['generated_hit_date' => new \stdClass()]);
 
         $this->connection->expects($this->never())
-            ->method('executeQuery');
+            ->method('query');
 
         $this->subscriber->addGeneratedColumns($this->event);
     }
 
-    public function testAddGeneratedColumnsWhenDoesNotExist(): void
+    public function testAddGeneratedColumnsWhenDoesNotExist()
     {
         $this->command->expects($this->once())
             ->method('getName')
@@ -153,8 +154,8 @@ class MigrationCommandSubscriberTest extends \PHPUnit\Framework\TestCase
             ->method('listTableColumns')
             ->willReturn(['id' => new \stdClass()]);
 
-        $this->connection->expects($this->once())
-            ->method('executeQuery');
+        $this->connection->expects($this->atLeastOnce())
+            ->method('query');
 
         $this->subscriber->addGeneratedColumns($this->event);
     }

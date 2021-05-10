@@ -1,31 +1,65 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Mautic\CoreBundle\Doctrine\GeneratedColumn;
 
 interface GeneratedColumnInterface
 {
-    public function getTableName(): string;
+    /**
+     * @return string
+     */
+    public function getTableName();
 
-    public function getColumnName(): string;
+    /**
+     * @return string
+     */
+    public function getColumnName();
 
-    public function addIndexColumn(string $indexColumn): void;
+    /**
+     * @param string $indexColumn
+     */
+    public function addIndexColumn($indexColumn);
 
     /**
      * If set then the line chart queries will use this column for the time unit instead of the original.
+     *
+     * @param string $originalDateColumn
+     * @param string $timeUnit
      */
-    public function setOriginalDateColumn(string $originalDateColumn, string $timeUnit): void;
+    public function setOriginalDateColumn($originalDateColumn, $timeUnit);
 
-    public function getOriginalDateColumn(): ?string;
+    /**
+     * @return string
+     */
+    public function getOriginalDateColumn();
 
-    public function getTimeUnit(): string;
+    /**
+     * @return string
+     */
+    public function getTimeUnit();
 
-    public function getAlterTableSql(): string;
+    /**
+     * @return string
+     */
+    public function getAlterTableSql();
 
-    public function getColumnDefinition(): string;
+    public function getAddColumnSql(): string;
 
-    public function getIndexColumns(): array;
+    public function getAddIndexSql(): string;
 
-    public function getIndexName(): string;
+    /**
+     * @return string
+     */
+    public function getColumnDefinition();
+
+    /**
+     * @return array
+     */
+    public function getIndexColumns();
+
+    /**
+     * @return string
+     */
+    public function getIndexName();
+
+    public function getFilterDateColumn(): ?string;
 }

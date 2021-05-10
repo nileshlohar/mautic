@@ -511,6 +511,14 @@ return [
                 'class'     => Mautic\CoreBundle\Doctrine\Provider\GeneratedColumnsProvider::class,
                 'arguments' => ['mautic.database.version.provider', 'event_dispatcher'],
             ],
+            'mautic.core.subscriber.migration_command' => [
+                'class'       => Mautic\CoreBundle\EventListener\MigrationCommandSubscriber::class,
+                'arguments'   => [
+                    'mautic.database.version.provider',
+                    'mautic.generated.columns.provider',
+                    'database_connection',
+                ],
+            ],
             'mautic.generated.columns.doctrine.listener' => [
                 'class'        => Mautic\CoreBundle\EventListener\DoctrineGeneratedColumnsListener::class,
                 'tag'          => 'doctrine.event_listener',
