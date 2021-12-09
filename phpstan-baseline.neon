@@ -34316,6 +34316,281 @@ parameters:
 			path: app/bundles/SmsBundle/Tests/EventListener/SmsSubscriberTest.php
 
 		-
+			message: "#^Call to function is_array\\(\\) with null will always evaluate to false\\.$#"
+			count: 1
+			path: app/bundles/SmsBundle/Model/SmsModel.php
+
+		-
+			message: "#^Method Mautic\\\\SmsBundle\\\\Model\\\\SmsModel\\:\\:createForm\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: app/bundles/SmsBundle/Model/SmsModel.php
+
+		-
+			message: "#^Method Mautic\\\\SmsBundle\\\\Model\\\\SmsModel\\:\\:dispatchEvent\\(\\) should return Symfony\\\\Component\\\\EventDispatcher\\\\Event\\|null but empty return statement found\\.$#"
+			count: 2
+			path: app/bundles/SmsBundle/Model/SmsModel.php
+
+		-
+			message: "#^Method Mautic\\\\SmsBundle\\\\Model\\\\SmsModel\\:\\:getEntity\\(\\) has parameter \\$id with no typehint specified\\.$#"
+			count: 1
+			path: app/bundles/SmsBundle/Model/SmsModel.php
+
+		-
+			message: "#^Method Mautic\\\\SmsBundle\\\\Model\\\\SmsModel\\:\\:getDoNotContactRepository\\(\\) should return Mautic\\\\LeadBundle\\\\Entity\\\\DoNotContactRepository but returns Doctrine\\\\Persistence\\\\ObjectRepository\\.$#"
+			count: 1
+			path: app/bundles/SmsBundle/Model/SmsModel.php
+
+		-
+			message: "#^Method Mautic\\\\SmsBundle\\\\Model\\\\SmsModel\\:\\:getHitsLineChartData\\(\\) has parameter \\$filter with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: app/bundles/SmsBundle/Model/SmsModel.php
+
+		-
+			message: "#^Method Mautic\\\\SmsBundle\\\\Model\\\\SmsModel\\:\\:getHitsLineChartData\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: app/bundles/SmsBundle/Model/SmsModel.php
+
+		-
+			message: "#^Method Mautic\\\\SmsBundle\\\\Model\\\\SmsModel\\:\\:getLookupResults\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: app/bundles/SmsBundle/Model/SmsModel.php
+
+		-
+			message: "#^Method Mautic\\\\SmsBundle\\\\Model\\\\SmsModel\\:\\:getLookupResults\\(\\) has parameter \\$type with no typehint specified\\.$#"
+			count: 1
+			path: app/bundles/SmsBundle/Model/SmsModel.php
+
+		-
+			message: "#^Method Mautic\\\\SmsBundle\\\\Model\\\\SmsModel\\:\\:getLookupResults\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: app/bundles/SmsBundle/Model/SmsModel.php
+
+		-
+			message: "#^Method Mautic\\\\SmsBundle\\\\Model\\\\SmsModel\\:\\:getRepository\\(\\) should return Mautic\\\\SmsBundle\\\\Entity\\\\SmsRepository but returns Doctrine\\\\Persistence\\\\ObjectRepository\\.$#"
+			count: 1
+			path: app/bundles/SmsBundle/Model/SmsModel.php
+
+		-
+			message: "#^Method Mautic\\\\SmsBundle\\\\Model\\\\SmsModel\\:\\:getSmsClickStats\\(\\) has parameter \\$smsId with no typehint specified\\.$#"
+			count: 1
+			path: app/bundles/SmsBundle/Model/SmsModel.php
+
+		-
+			message: "#^Method Mautic\\\\SmsBundle\\\\Model\\\\SmsModel\\:\\:getSmsClickStats\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: app/bundles/SmsBundle/Model/SmsModel.php
+
+		-
+			message: "#^Method Mautic\\\\SmsBundle\\\\Model\\\\SmsModel\\:\\:getSmsStatByLeadId\\(\\) has parameter \\$leadId with no typehint specified\\.$#"
+			count: 1
+			path: app/bundles/SmsBundle/Model/SmsModel.php
+
+		-
+			message: "#^Method Mautic\\\\SmsBundle\\\\Model\\\\SmsModel\\:\\:getSmsStatByLeadId\\(\\) has parameter \\$smsId with no typehint specified\\.$#"
+			count: 1
+			path: app/bundles/SmsBundle/Model/SmsModel.php
+
+		-
+			message: "#^Method Mautic\\\\SmsBundle\\\\Model\\\\SmsModel\\:\\:getSmsStatByLeadId\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: app/bundles/SmsBundle/Model/SmsModel.php
+
+		-
+			message: "#^Method Mautic\\\\SmsBundle\\\\Model\\\\SmsModel\\:\\:getSmsStatus\\(\\) has parameter \\$idHash with no typehint specified\\.$#"
+			count: 1
+			path: app/bundles/SmsBundle/Model/SmsModel.php
+
+		-
+			message: "#^Method Mautic\\\\SmsBundle\\\\Model\\\\SmsModel\\:\\:getStatRepository\\(\\) should return Mautic\\\\SmsBundle\\\\Entity\\\\StatRepository but returns Doctrine\\\\Persistence\\\\ObjectRepository\\.$#"
+			count: 1
+			path: app/bundles/SmsBundle/Model/SmsModel.php
+
+		-
+			message: "#^Method Mautic\\\\SmsBundle\\\\Model\\\\SmsModel\\:\\:limitQueryToCreator\\(\\) has no return typehint specified\\.$#"
+			count: 1
+			path: app/bundles/SmsBundle/Model/SmsModel.php
+
+		-
+			message: "#^Method Mautic\\\\SmsBundle\\\\Model\\\\SmsModel\\:\\:saveEntities\\(\\) has parameter \\$entities with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: app/bundles/SmsBundle/Model/SmsModel.php
+
+		-
+			message: "#^Method Mautic\\\\SmsBundle\\\\Model\\\\SmsModel\\:\\:saveEntities\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: app/bundles/SmsBundle/Model/SmsModel.php
+
+		-
+			message: "#^Method Mautic\\\\SmsBundle\\\\Model\\\\SmsModel\\:\\:saveEntities\\(\\) should return array but return statement is missing\\.$#"
+			count: 1
+			path: app/bundles/SmsBundle/Model/SmsModel.php
+
+		-
+			message: "#^Method Mautic\\\\SmsBundle\\\\Model\\\\SmsModel\\:\\:sendSms\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: app/bundles/SmsBundle/Model/SmsModel.php
+
+		-
+			message: "#^Method Mautic\\\\SmsBundle\\\\Model\\\\SmsModel\\:\\:sendSms\\(\\) has parameter \\$sendTo with no typehint specified\\.$#"
+			count: 1
+			path: app/bundles/SmsBundle/Model/SmsModel.php
+
+		-
+			message: "#^Method Mautic\\\\SmsBundle\\\\Model\\\\SmsModel\\:\\:sendSms\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: app/bundles/SmsBundle/Model/SmsModel.php
+
+		-
+			message: "#^PHPDoc tag @param has invalid value \\(\\$action\\)\\: Unexpected token \"\\$action\", expected type at offset 46$#"
+			count: 1
+			path: app/bundles/SmsBundle/Model/SmsModel.php
+
+		-
+			message: "#^PHPDoc tag @param has invalid value \\(\\$entities\\)\\: Unexpected token \"\\$entities\", expected type at offset 60$#"
+			count: 1
+			path: app/bundles/SmsBundle/Model/SmsModel.php
+
+		-
+			message: "#^PHPDoc tag @param has invalid value \\(\\$entity\\)\\: Unexpected token \"\\$entity\", expected type at offset 52$#"
+			count: 1
+			path: app/bundles/SmsBundle/Model/SmsModel.php
+
+		-
+			message: "#^PHPDoc tag @param has invalid value \\(\\$entity\\)\\: Unexpected token \"\\$entity\", expected type at offset 89$#"
+			count: 1
+			path: app/bundles/SmsBundle/Model/SmsModel.php
+
+		-
+			message: "#^PHPDoc tag @param has invalid value \\(\\$event\\)\\: Unexpected token \"\\$event\", expected type at offset 68$#"
+			count: 1
+			path: app/bundles/SmsBundle/Model/SmsModel.php
+
+		-
+			message: "#^PHPDoc tag @param has invalid value \\(\\$formFactory\\)\\: Unexpected token \"\\$formFactory\", expected type at offset 80$#"
+			count: 1
+			path: app/bundles/SmsBundle/Model/SmsModel.php
+
+		-
+			message: "#^PHPDoc tag @param has invalid value \\(\\$id\\)\\: Unexpected token \"\\$id\", expected type at offset 92$#"
+			count: 1
+			path: app/bundles/SmsBundle/Model/SmsModel.php
+
+		-
+			message: "#^PHPDoc tag @param has invalid value \\(\\$idHash\\)\\: Unexpected token \"\\$idHash\", expected type at offset 18$#"
+			count: 1
+			path: app/bundles/SmsBundle/Model/SmsModel.php
+
+		-
+			message: "#^PHPDoc tag @param has invalid value \\(\\$isNew\\)\\: Unexpected token \"\\$isNew\", expected type at offset 111$#"
+			count: 1
+			path: app/bundles/SmsBundle/Model/SmsModel.php
+
+		-
+			message: "#^PHPDoc tag @param has invalid value \\(\\$leadId\\)\\: Unexpected token \"\\$leadId\", expected type at offset 97$#"
+			count: 1
+			path: app/bundles/SmsBundle/Model/SmsModel.php
+
+		-
+			message: "#^PHPDoc tag @param has invalid value \\(\\$sendTo\\)\\: Unexpected token \"\\$sendTo\", expected type at offset 24$#"
+			count: 1
+			path: app/bundles/SmsBundle/Model/SmsModel.php
+
+		-
+			message: "#^PHPDoc tag @param has invalid value \\(\\$smsId\\)\\: Unexpected token \"\\$smsId\", expected type at offset 63$#"
+			count: 1
+			path: app/bundles/SmsBundle/Model/SmsModel.php
+
+		-
+			message: "#^PHPDoc tag @param has invalid value \\(\\$smsId\\)\\: Unexpected token \"\\$smsId\", expected type at offset 76$#"
+			count: 1
+			path: app/bundles/SmsBundle/Model/SmsModel.php
+
+		-
+			message: "#^PHPDoc tag @param has invalid value \\(\\$type\\)\\: Unexpected token \"\\$type\", expected type at offset 25$#"
+			count: 1
+			path: app/bundles/SmsBundle/Model/SmsModel.php
+
+		-
+			message: "#^PHPDoc tag @param has invalid value \\(\\$unlock\\)\\: Unexpected token \"\\$unlock\", expected type at offset 85$#"
+			count: 1
+			path: app/bundles/SmsBundle/Model/SmsModel.php
+
+		-
+			message: "#^PHPDoc tag @var has invalid value \\(\\)\\: Unexpected token \"\\\\n     \", expected type at offset 15$#"
+			count: 1
+			path: app/bundles/SmsBundle/Model/SmsModel.php
+
+		-
+			message: "#^Parameter \\#1 \\$source of method Mautic\\\\SmsBundle\\\\Entity\\\\Stat\\:\\:setSource\\(\\) expects string, null given\\.$#"
+			count: 1
+			path: app/bundles/SmsBundle/Model/SmsModel.php
+
+		-
+			message: "#^Parameter \\#1 \\$unit of class Mautic\\\\CoreBundle\\\\Helper\\\\Chart\\\\LineChart constructor expects string\\|null, Mautic\\\\SmsBundle\\\\Model\\\\char given\\.$#"
+			count: 1
+			path: app/bundles/SmsBundle/Model/SmsModel.php
+
+		-
+			message: "#^Parameter \\$unit of method Mautic\\\\SmsBundle\\\\Model\\\\SmsModel\\:\\:getHitsLineChartData\\(\\) has invalid typehint type Mautic\\\\SmsBundle\\\\Model\\\\char\\.$#"
+			count: 1
+			path: app/bundles/SmsBundle/Model/SmsModel.php
+
+		-
+			message: "#^Property Mautic\\\\SmsBundle\\\\Model\\\\SmsModel\\:\\:\\$transport has no typehint specified\\.$#"
+			count: 1
+			path: app/bundles/SmsBundle/Model/SmsModel.php
+
+		-
+			message: "#^Variable \\$action in empty\\(\\) always exists and is always falsy\\.$#"
+			count: 1
+			path: app/bundles/SmsBundle/Model/SmsModel.php
+
+		-
+			message: "#^Method Mautic\\\\SmsBundle\\\\Security\\\\Permissions\\\\SmsPermissions\\:\\:__construct\\(\\) has parameter \\$params with no typehint specified\\.$#"
+			count: 1
+			path: app/bundles/SmsBundle/Security/Permissions/SmsPermissions.php
+
+		-
+			message: "#^Method Mautic\\\\SmsBundle\\\\Security\\\\Permissions\\\\SmsPermissions\\:\\:buildForm\\(\\) has no return typehint specified\\.$#"
+			count: 1
+			path: app/bundles/SmsBundle/Security/Permissions/SmsPermissions.php
+
+		-
+			message: "#^Method Mautic\\\\SmsBundle\\\\Security\\\\Permissions\\\\SmsPermissions\\:\\:buildForm\\(\\) has parameter \\$builder with no value type specified in iterable type Symfony\\\\Component\\\\Form\\\\FormBuilderInterface\\.$#"
+			count: 1
+			path: app/bundles/SmsBundle/Security/Permissions/SmsPermissions.php
+
+		-
+			message: "#^Method Mautic\\\\SmsBundle\\\\Security\\\\Permissions\\\\SmsPermissions\\:\\:buildForm\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: app/bundles/SmsBundle/Security/Permissions/SmsPermissions.php
+
+		-
+			message: "#^Method Mautic\\\\SmsBundle\\\\Security\\\\Permissions\\\\SmsPermissions\\:\\:buildForm\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: app/bundles/SmsBundle/Security/Permissions/SmsPermissions.php
+
+		-
+			message: "#^Parameter \\#1 \\$permissionNames of method Mautic\\\\CoreBundle\\\\Security\\\\Permissions\\\\AbstractPermissions\\:\\:addExtendedPermissions\\(\\) expects array, string given\\.$#"
+			count: 1
+			path: app/bundles/SmsBundle/Security/Permissions/SmsPermissions.php
+
+		-
+			message: "#^Parameter \\#1 \\$permissionNames of method Mautic\\\\CoreBundle\\\\Security\\\\Permissions\\\\AbstractPermissions\\:\\:addStandardPermissions\\(\\) expects array, string given\\.$#"
+			count: 1
+			path: app/bundles/SmsBundle/Security/Permissions/SmsPermissions.php
+
+		-
+			message: "#^Method Mautic\\\\SmsBundle\\\\Tests\\\\DependencyInjection\\\\Compiler\\\\SmsTransportPassTest\\:\\:testProcess\\(\\) has no return typehint specified\\.$#"
+			count: 1
+			path: app/bundles/SmsBundle/Tests/DependencyInjection/Compiler/SmsTransportPassTest.php
+
+		-
+			message: "#^Method Mautic\\\\SmsBundle\\\\Tests\\\\EventListener\\\\SmsSubscriberTest\\:\\:testOnTokenReplacementWithDisableTrackableUrls\\(\\) has no return typehint specified\\.$#"
+			count: 1
+			path: app/bundles/SmsBundle/Tests/EventListener/SmsSubscriberTest.php
+
+		-
 			message: '#^Property Mautic\\SmsBundle\\Tests\\EventListener\\SmsSubscriberTest\:\:\$messageUrl has no type specified\.$#'
 			identifier: missingType.property
 			count: 1

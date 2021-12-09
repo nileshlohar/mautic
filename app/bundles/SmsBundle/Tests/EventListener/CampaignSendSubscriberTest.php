@@ -1,79 +1,99 @@
 <?php
 
+/*
+ * @copyright   2014 Mautic Contributors. All rights reserved
+ * @author      Mautic
+ *
+ * @link        http://mautic.org
+ *
+ * @license     GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
+ */
+
 namespace Mautic\SmsBundle\Tests\EventListener;
 
-use Mautic\CampaignBundle\Event\CampaignExecutionEvent;
+use Doctrine\Common\Collections\ArrayCollection;
+use Mautic\CampaignBundle\Entity\Campaign;
+use Mautic\CampaignBundle\Entity\Event;
+use Mautic\CampaignBundle\Entity\EventRepository;
+use Mautic\CampaignBundle\Entity\LeadEventLog;
+use Mautic\CampaignBundle\Entity\LeadRepository;
+use Mautic\CampaignBundle\Event\PendingEvent;
+use Mautic\CampaignBundle\EventCollector\Accessor\Event\ActionAccessor;
+use Mautic\CoreBundle\Event\TokenReplacementEvent;
+use Mautic\CoreBundle\Model\AuditLogModel;
 use Mautic\LeadBundle\Entity\Lead;
 use Mautic\SmsBundle\Entity\Sms;
+use Mautic\SmsBundle\Entity\SmsRepository;
 use Mautic\SmsBundle\EventListener\CampaignSendSubscriber;
 use Mautic\SmsBundle\Model\SmsModel;
 use Mautic\SmsBundle\Sms\TransportChain;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\TestCase;
+use Symfony\Component\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 
-class CampaignSendSubscriberTest extends \PHPUnit\Framework\TestCase
+class CampaignSendSubscriberTest extends TestCase
 {
-    /**
-     * @var mixed[]
-     */
-    private $args;
-
-    /**
-     * @var MockObject|SmsModel
-     */
-    private MockObject $smsModel;
-
-    /**
-     * @var MockObject|TransportChain
-     */
-    private MockObject $transportChain;
-
-    protected function setUp(): void
+    public function testOnCampaignTriggerBatchAction(): void
     {
-        $this->smsModel       = $this->createMock(SmsModel::class);
-        $this->transportChain = $this->createMock(TransportChain::class);
+        $sms = $this->createMock(Sms::class);
+        $sms->expects($this->any())
+            ->method('getId')
+            ->willReturn(1);
 
-        $lead = new Lead();
-        $lead->setId(1);
-        $this->args = [
-            'lead'            => $lead,
-            'event'           => [
-                'type'       => 'sms.send_text_sms',
-                'properties' => ['sms' => 1],
-            ],
-            'eventDetails'    => [],
-            'systemTriggered' => true,
-            'eventSettings'   => [],
-        ];
-    }
+        // Partial mock, mocks just getRepository
+        $smsModel = $this->getMockBuilder(SmsModel::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['sendSms', 'getEntity'])
+            ->getMock();
 
-    public function testSendDeletedSms(): void
-    {
-        $this->smsModel->expects(self::once())->method('getEntity')->willReturn(null);
+        $smsModel->method('sendSms')
+            ->willReturn(true);
+        $smsModel->method('getEntity')
+            ->willReturn($sms);
 
-        $event = new CampaignExecutionEvent($this->args, false, null);
+        $transportChain = $this->createMock(TransportChain::class);
 
-        $this->CampaignSendSubscriber()->onCampaignTriggerAction($event);
-        self::assertTrue((bool) $event->getResult()['failed']);
-        self::assertSame('mautic.sms.campaign.failed.missing_entity', $event->getResult()['reason']);
-    }
+        $event    = new Event();
+        $campaign = new class() extends Campaign {
+            public function getId()
+            {
+                return 111;
+            }
+        };
+        $leadLog = new class() extends LeadEventLog {
+            public function getId()
+            {
+                return 456;
+            }
+        };
+        $contact = new class() extends Lead {
+            public function getId()
+            {
+                return 789;
+            }
+        };
 
-    public function testSendUnpublishedSms(): void
-    {
-        $lead = new Lead();
-        $lead->setId(1);
-        $sms = new Sms();
-        $sms->setIsPublished(false);
-        $this->smsModel->expects(self::once())->method('getEntity')->willReturn($sms);
+        $leadLog->setLead($contact);
 
-        $event = new CampaignExecutionEvent($this->args, false, null);
+        $translator = new class() extends Translator {
+            public function __construct()
+            {
+            }
+        };
 
-        $this->CampaignSendSubscriber()->onCampaignTriggerAction($event);
-        self::assertTrue((bool) $event->getResult()['failed']);
-        self::assertSame('mautic.sms.campaign.failed.unpublished', $event->getResult()['reason']);
-    }
+        $subscriber = new CampaignSendSubscriber(
+            $smsModel,
+            $transportChain,
+            $translator
+        );
 
-    private function CampaignSendSubscriber(): CampaignSendSubscriber
-    {
-        return new CampaignSendSubscriber($this->smsModel, $this->transportChain);
+        $event->setProperties(['sms' => 1]);
+        $event->setCampaign($campaign);
+
+        $pendingEvent = new PendingEvent(new ActionAccessor([]), $event, new ArrayCollection([$leadLog->getId() => $leadLog]));
+
+        $this->assertCount(1, $pendingEvent->getContacts());
+        $subscriber->onCampaignTriggerBatchAction($pendingEvent);
     }
 }
