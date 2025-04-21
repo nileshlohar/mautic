@@ -44,8 +44,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class CampaignModel extends CommonFormModel implements GlobalSearchInterface
 {
-    private GeneratedColumnsProviderInterface $generatedColumnsProvider;
-
     public function __construct(
         protected ListModel $leadListModel,
         protected FormModel $formModel,
@@ -63,7 +61,6 @@ class CampaignModel extends CommonFormModel implements GlobalSearchInterface
         CoreParametersHelper $coreParametersHelper,
     ) {
         parent::__construct($em, $security, $dispatcher, $router, $translator, $userHelper, $mauticLogger, $coreParametersHelper);
-        $this->generatedColumnsProvider = $generatedColumnsProvider;
     }
 
     /**

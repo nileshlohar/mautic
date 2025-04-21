@@ -1,6 +1,5 @@
 <?php
 
-
 return [
     'routes' => [
         'main' => [
@@ -144,14 +143,6 @@ return [
                     'mautic.security',
                 ],
             ],
-            'mautic.campaign.calendarbundle.subscriber'           => [
-                'class'     => Mautic\CampaignBundle\EventListener\CalendarSubscriber::class,
-                'arguments' => [
-                    'doctrine.dbal.default_connection',
-                    'translator',
-                    'router',
-                ],
-            ],
             'mautic.campaign.pointbundle.subscriber'              => [
                 'class' => Mautic\CampaignBundle\EventListener\PointSubscriber::class,
             ],
@@ -160,7 +151,6 @@ return [
                 'arguments' => [
                     'mautic.campaign.model.campaign',
                     'mautic.security',
-                    'mautic.helper.templating',
                 ],
             ],
             'mautic.campaign.dashboard.subscriber'                => [
@@ -210,9 +200,6 @@ return [
                     'mautic.campaign.repository.lead_event_log',
                 ],
             ],
-            'mautic.campaign.update.subscriber'                   => [
-                'class' => Mautic\CampaignBundle\EventListener\CampaignUpdateSubscriber::class,
-            ],
             'mautic.campaign.generated_columns.subscriber' => [
                 'class' => Mautic\CampaignBundle\EventListener\GeneratedColumnSubscriber::class,
             ],
@@ -247,7 +234,6 @@ return [
             ],
             'mautic.campaign.type.leadsource'           => [
                 'class'     => 'Mautic\CampaignBundle\Form\Type\CampaignLeadSourceType',
-                'arguments' => 'mautic.factory',
             ],
             'mautic.form.type.campaignconfig'           => [
                 'class'     => 'Mautic\CampaignBundle\Form\Type\ConfigType',
@@ -536,7 +522,7 @@ return [
                     'mautic.campaign.scheduler',
                     'monolog.logger.mautic',
                     'mautic.lead.model.lead',
-                    'mautic.factory',
+                    'mautic.tracker.contact',
                 ],
             ],
         ],
@@ -554,7 +540,7 @@ return [
                     'mautic.campaign.repository.lead',
                     'mautic.campaign.repository.lead_event_log',
                     'translator',
-                    'mautic.helper.template.date',
+                    'mautic.helper.twig.date',
                 ],
             ],
             'mautic.campaign.membership.event_dispatcher' => [
@@ -595,7 +581,7 @@ return [
                     'mautic.campaign.executioner.scheduled',
                     'mautic.campaign.executioner.inactive',
                     'monolog.logger.mautic',
-                    'mautic.helper.template.formatter',
+                    'mautic.helper.twig.formatter',
                     'mautic.lead.model.list',
                     'mautic.helper.segment.count.cache',
                 ],
@@ -606,7 +592,7 @@ return [
                 'arguments' => [
                     'mautic.campaign.executioner.scheduled',
                     'translator',
-                    'mautic.helper.template.formatter',
+                    'mautic.helper.twig.formatter',
                 ],
                 'tag' => 'console.command',
             ],
@@ -615,7 +601,7 @@ return [
                 'arguments' => [
                     'mautic.campaign.executioner.inactive',
                     'translator',
-                    'mautic.helper.template.formatter',
+                    'mautic.helper.twig.formatter',
                 ],
                 'tag' => 'console.command',
             ],
@@ -626,7 +612,7 @@ return [
                     'translator',
                     'mautic.campaign.membership.builder',
                     'monolog.logger.mautic',
-                    'mautic.helper.template.formatter',
+                    'mautic.helper.twig.formatter',
                 ],
                 'tag' => 'console.command',
             ],

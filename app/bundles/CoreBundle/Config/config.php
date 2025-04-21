@@ -511,6 +511,14 @@ return [
                 'class'     => Mautic\CoreBundle\Doctrine\Provider\GeneratedColumnsProvider::class,
                 'arguments' => ['mautic.database.version.provider', 'event_dispatcher'],
             ],
+            'mautic.service.globalsearch' => [
+                'class'     => Mautic\CoreBundle\Service\GlobalSearch::class,
+                'arguments' => [
+                    'event_dispatcher',
+                    'doctrine.orm.entity_manager',
+                    'translator',
+                ],
+            ],
             'mautic.core.subscriber.migration_command' => [
                 'class'       => Mautic\CoreBundle\EventListener\MigrationCommandSubscriber::class,
                 'arguments'   => [
