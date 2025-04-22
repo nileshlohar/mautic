@@ -251,14 +251,22 @@ class CampaignRepository extends CommonRepository
         return $q->getQuery()->getResult();
     }
 
-    public function getTableAlias(): string
+    /**
+     * @return string
+     */
+    public function getTableAlias()
     {
         return 'c';
     }
 
-    protected function addCatchAllWhereClause($qb, $filter): array
+    /**
+     * @param \Doctrine\ORM\QueryBuilder|\Doctrine\DBAL\Query\QueryBuilder $q
+     *
+     * @return array
+     */
+    protected function addCatchAllWhereClause($q, $filter)
     {
-        return $this->addStandardCatchAllWhereClause($qb, $filter, [
+        return $this->addStandardCatchAllWhereClause($q, $filter, [
             'c.name',
             'c.description',
         ]);
@@ -266,13 +274,18 @@ class CampaignRepository extends CommonRepository
 
     /**
      * @param \Doctrine\ORM\QueryBuilder|\Doctrine\DBAL\Query\QueryBuilder $q
+     *
+     * @return array
      */
-    protected function addSearchCommandWhereClause($q, $filter): array
+    protected function addSearchCommandWhereClause($q, $filter)
     {
         return $this->addStandardSearchCommandWhereClause($q, $filter);
     }
 
-    public function getSearchCommands(): array
+    /**
+     * @return string[]
+     */
+    public function getSearchCommands()
     {
         return $this->getStandardSearchCommands();
     }

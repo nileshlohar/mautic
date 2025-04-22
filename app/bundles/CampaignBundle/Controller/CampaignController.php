@@ -68,7 +68,10 @@ class CampaignController extends AbstractStandardFormController
 
     protected $sessionId;
 
-    protected function getPermissions(): array
+    /**
+     * @return array
+     */
+    protected function getPermissions()
     {
         // set some permissions
         return (array) $this->get('mautic.security')->isGranted(
@@ -387,8 +390,10 @@ class CampaignController extends AbstractStandardFormController
      * @param Campaign $entity
      * @param null     $objectId
      * @param bool     $isClone
+     *
+     * @return bool
      */
-    protected function beforeEntitySave($entity, Form $form, $action, $objectId = null, $isClone = false): bool
+    protected function beforeEntitySave($entity, Form $form, $action, $objectId = null, $isClone = false)
     {
         if (empty($this->campaignEvents)) {
             // set the error
@@ -587,12 +592,18 @@ class CampaignController extends AbstractStandardFormController
         );
     }
 
-    protected function getModelName(): string
+    /**
+     * @return string
+     */
+    protected function getModelName()
     {
         return 'campaign';
     }
 
-    protected function getPostActionRedirectArguments(array $args, $action): array
+    /**
+     * @return array
+     */
+    protected function getPostActionRedirectArguments(array $args, $action)
     {
         switch ($action) {
             case 'new':
