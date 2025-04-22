@@ -19,6 +19,16 @@ final class GeneratedColumn implements GeneratedColumnInterface
 
     private array $indexColumns = [];
 
+    /**
+     * @var bool
+     */
+    private $stored = false;
+
+    /**
+     * @var ?string
+     */
+    private $filterDateColumn;
+
     public function __construct(
         private string $tableName,
         string $columnName,
@@ -45,6 +55,11 @@ final class GeneratedColumn implements GeneratedColumnInterface
         $this->indexColumns[] = $indexColumn;
     }
 
+    public function prependIndexColumn(string $indexColumn): void
+    {
+        array_unshift($this->indexColumns, $indexColumn);
+    }
+
     public function setOriginalDateColumn(string $originalDateColumn, string $timeUnit): void
     {
         $this->originalDateColumn = $originalDateColumn;
@@ -61,15 +76,34 @@ final class GeneratedColumn implements GeneratedColumnInterface
         return $this->timeUnit;
     }
 
+    public function setStored(bool $stored): void
+    {
+        $this->stored = $stored;
+    }
+
+    public function getFilterDateColumn(): ?string
+    {
+        return $this->filterDateColumn;
+    }
+
+    public function setFilterDateColumn(?string $filterDateColumn): void
+    {
+        $this->filterDateColumn = $filterDateColumn;
+    }
+
     public function getAlterTableSql(): string
     {
+        $stored = $this->stored ? ' STORED' : '';
+
         return "ALTER TABLE {$this->getTableName()} ADD {$this->getColumnName()} {$this->getColumnDefinition()};
             ALTER TABLE {$this->getTableName()} ADD INDEX `{$this->getIndexName()}`({$this->indexColumnsToString()})";
     }
 
     public function getColumnDefinition(): string
     {
-        return "{$this->columnType} AS ({$this->as}) COMMENT '(DC2Type:generated)'";
+        $stored = $this->stored ? ' STORED' : '';
+
+        return "{$this->columnType} AS ({$this->as}){$stored} COMMENT '(DC2Type:generated)'";
     }
 
     public function getIndexColumns(): array
