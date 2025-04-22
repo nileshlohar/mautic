@@ -151,6 +151,7 @@ return [
                 'arguments' => [
                     'mautic.campaign.model.campaign',
                     'mautic.security',
+                    'mautic.service.globalsearch',
                 ],
             ],
             'mautic.campaign.dashboard.subscriber'                => [
