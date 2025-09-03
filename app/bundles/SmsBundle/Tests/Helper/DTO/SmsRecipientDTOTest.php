@@ -6,7 +6,6 @@ namespace Mautic\SmsBundle\Tests\Helper\DTO;
 
 use Mautic\LeadBundle\Entity\Lead;
 use Mautic\SmsBundle\Collection\RecipientCollection;
-use Mautic\SmsBundle\Entity\Sms;
 use Mautic\SmsBundle\Helper\DTO\SmsRecipientDTO;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;

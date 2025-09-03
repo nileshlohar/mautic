@@ -60,10 +60,7 @@ class SmsRecipientDTO implements \JsonSerializable
         return $this->substitutionData;
     }
 
-    /**
-     * @return mixed
-     */
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         $json = [
             'lead'   => $this->lead,
